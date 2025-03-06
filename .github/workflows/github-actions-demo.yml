@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build container image
-        run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME) .
+      run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME) .
     - name: Install doctl
       uses: digitalocean/action-doctl@v2
       with:
