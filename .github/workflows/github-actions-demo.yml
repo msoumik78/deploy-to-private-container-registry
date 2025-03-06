@@ -3,8 +3,24 @@ run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on:
   push:
     branches: [ main ]
+env:
+  REGISTRY: "registry.digitalocean.com/auto-trader-registry"
+  IMAGE_NAME: "express-app-soumik"
+
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    - name: Build container image
+        run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME) .
+    - name: Install doctl
+      uses: digitalocean/action-doctl@v2
+      with:
+        token: dop_v1_1d1fa46c464472f55c7254539c0738b73d43ec4cbf273456b4b3b1940dc6f27f
+  
+    - name: Log in to DigitalOcean Container Registry with short-lived credentials
+      run: doctl registry login --expiry-seconds 1200
+    
+    - name: Push image to DigitalOcean Container Registry
+      run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME)
